@@ -1,0 +1,64 @@
+trigger: none
+
+schedules:
+
+- cron: "*/15 14-21 * * Mon-Fri"
+  displayName: Every 15 min M-F 9am-4:45pm (UTC-05:00)
+  branches:
+    include:
+    - master
+  always: true
+
+- cron: "0 22 * * Mon-Fri"
+  displayName: M-F 5pm (UTC-05:00)
+  branches:
+    include:
+    - master
+  always: true
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+
+- checkout: self
+  persistCredentials: true
+  clean: true
+
+- script: echo ${AZURE_DEVOPS_CLI_PAT} | az devops login
+  env:
+    AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
+  displayName: 'Login Azure DevOps Extension'
+
+- script: az devops configure --defaults organization=$(System.TeamFoundationCollectionUri) project=$(System.TeamProject)
+  displayName: 'Set default Azure DevOps organization and project'
+
+- pwsh: |
+    # Checkout the source branch
+    git checkout $(Build.SourceBranchName)
+
+    # Get all variable groups
+    $groups = ConvertFrom-Json "$(az pipelines variable-group list)"
+    $groups | foreach {
+      $groupName = $_.name
+
+      # Prepend VariableGroups folder name
+      $filePath = Join-Path "VariableGroups" "$groupName.json"
+
+      # Save the variable group to a file
+      ConvertTo-Json $_ | New-Item $filePath -Force
+
+      # Use the last modified user's name and email
+      git config user.email $_.modifiedBy.uniqueName
+      git config user.name $_.modifiedBy.displayName
+
+      # Stage the file
+      git add $filePath
+
+      # Commit
+      git commit -m "Variable group $groupName updates"
+    }
+
+    # Push all changes
+    git push origin
+  displayName: 'Save variable groups'
