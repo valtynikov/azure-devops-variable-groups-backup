@@ -4,7 +4,7 @@ Easily backup your Azure DevOps variable groups to a Git repo on a scheduled bas
 
 - Each variable group, including all metadata and variables, saved as a seprate JSON file
 - The **Modified by** user for each variable group is associated with the commit by the backup process
-- The default schedule is set to run every 15 minutes Mon-Fri between 9am and 5pm
+- The default schedule is set to run every 15 minutes Mon-Fri between 9am and 5pm (UTC-05:00)
 
 ## Setup
 
