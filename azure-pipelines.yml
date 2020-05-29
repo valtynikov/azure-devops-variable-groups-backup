@@ -25,6 +25,26 @@ steps:
   persistCredentials: true
   clean: true
 
+# Updating the python version available on the linux agent
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+    architecture: 'x64'
+
+# Updating pip to latest
+- script: python -m pip install --upgrade pip
+  displayName: 'Upgrade pip'
+
+# Updating to latest Azure CLI version.
+- script: pip install --pre azure-cli --extra-index-url https://azurecliprod.blob.core.windows.net/edge
+  displayName: 'Upgrade Azure CLI'
+
+- script: az --version
+  displayName: 'Show Azure CLI version'
+
+- script: az extension add -n azure-devops
+  displayName: 'Install Azure DevOps Extension'
+
 - script: echo ${AZURE_DEVOPS_CLI_PAT} | az devops login
   env:
     AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
