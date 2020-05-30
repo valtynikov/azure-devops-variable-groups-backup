@@ -50,7 +50,7 @@ steps:
     AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
   displayName: 'Login Azure DevOps Extension'
 
-- script: az devops configure --defaults organization=$(System.TeamFoundationCollectionUri) project=$(System.TeamProject)
+- script: az devops configure --defaults organization=$(System.TeamFoundationCollectionUri) project="$(System.TeamProject)"
   displayName: 'Set default Azure DevOps organization and project'
 
 - pwsh: |
