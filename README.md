@@ -10,6 +10,9 @@ Easily backup your Azure DevOps variable groups to a Git repo on a scheduled bas
 
 1. Create a new Git repo in your Azure DevOps project
 2. Grant the **Project Collection Build Service** _Contribute_ permission to the Git repo<sup>1</sup>
+
+Note: Secret is to copy the user UUID from the error message and paste it into the 'Search' box - it reveals a user that is not shown on the page by default. Then just add Contribute permissions. stackoverflow.com/a/55995046/923410  
+
 3. Commit the `azure-pipelines.yml` to the repo
 4. Create a new pipeline using the `azure-pipelines.yml` file
 5. Adjust the pipeline schedule as desired <sup>2</sup>
