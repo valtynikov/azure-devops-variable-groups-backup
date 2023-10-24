@@ -55,6 +55,7 @@ steps:
 
 - pwsh: |
     # Checkout the source branch
+    git fetch --all
     git checkout $(Build.SourceBranchName)
 
     # Get all variable groups
